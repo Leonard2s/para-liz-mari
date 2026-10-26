@@ -7,7 +7,7 @@
 <title>Para mi amor ❤</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;overflow:hidden}
@@ -75,11 +75,11 @@
   @keyframes blink{50%{opacity:.4}}
 
   /* Mensaje */
-  #message .line{font-family:'Dancing Script',cursive;font-weight:700;text-shadow:0 4px 14px rgba(150,0,60,.5);line-height:1.2}
-  #message .l2{font-size:58px}
+  #message .line{font-family:'Great Vibes',cursive;font-weight:400;text-shadow:0 4px 14px rgba(150,0,60,.5);line-height:1.2}
+  #message .l1{font-size:72px}
+  #message .l2{font-size:56px}
   #message .l3{font-size:40px;margin-top:10px}
   #message .l4{font-size:44px;margin-top:6px}
-  #message .l5{font-size:50px;margin-top:4px}
   .ch{display:inline-block;opacity:0;transform:translateY(30px) scale(.4) rotate(-15deg);animation:pop .55s cubic-bezier(.2,1.6,.4,1) forwards}
   @keyframes pop{to{opacity:1;transform:none}}
   .glow{animation:glow 2s ease-in-out infinite alternate}
@@ -96,7 +96,12 @@
   #gifts{max-width:480px;padding:18px 0}
   #gifts h2{font-family:'Great Vibes',cursive;font-size:40px;font-weight:400;margin:0 20px 6px;text-shadow:0 3px 10px rgba(150,0,60,.4)}
   #gifts .sub{margin:0 20px 10px}
-  .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:10px 12%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;gap:14px;padding:10px 12%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .dots-nav{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 16px;margin-top:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:transform .2s,background .2s}
+  .dot.on{background:#fff;transform:scale(1.35)}
+  .finish{margin-top:14px;background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 10px 25px rgba(18,140,126,.45)}
+  #giftsErr{margin-top:10px;min-height:20px}
   .carousel::-webkit-scrollbar{display:none}
   .slide{flex:0 0 76%;scroll-snap-align:center;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.55);border-radius:26px;padding:24px 18px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 14px 34px rgba(160,20,70,.3);display:flex;flex-direction:column;align-items:center;min-height:340px;transition:transform .3s,background .3s}
   .slide .food{font-size:96px;line-height:1.1;margin-top:6px}
@@ -139,7 +144,7 @@
   @media (max-height:640px){
     .ring{width:240px;height:240px}
     .name-btn{font-size:48px}
-    #message .l2{font-size:50px}#message .l3{font-size:38px}#message .l4{font-size:42px}#message .l5{font-size:46px}
+    #message .l1{font-size:60px}#message .l2{font-size:48px}#message .l3{font-size:38px}#message .l4{font-size:42px}
   }
 </style>
 </head>
@@ -209,10 +214,10 @@
 
 <!-- Mensaje animado -->
 <section id="message" class="screen">
+  <div class="line l1 glow" data-text="Susan"></div>
   <div class="line l2" data-text="susantísimo"></div>
   <div class="line l3" data-text="¡qué linda tú estás"></div>
-  <div class="line l4" data-text="wow qué bella"></div>
-  <div class="line l5 glow" data-text="mi Doctora hermosa 💖"></div>
+  <div class="line l4 glow" data-text="wow qué bella mi Doctora hermosa 💖"></div>
   <button class="again" id="toGifts">Tengo un regalo para ti 🎁</button>
 </section>
 
@@ -221,11 +226,14 @@
   <h2>¿Qué antojo quieres que te regale?</h2>
   <p class="sub">Desliza y toca "Lo quiero" en todo lo que se te antoje 💕</p>
   <div class="carousel" id="carousel"></div>
+  <div class="dots-nav" id="dots"></div>
   <div class="nav">
     <button id="prev" aria-label="Anterior">‹</button>
     <span class="count" id="count">0 elegidos</span>
     <button id="next" aria-label="Siguiente">›</button>
   </div>
+  <button class="finish" id="finishBtn">Terminar y enviar 💌</button>
+  <div class="error" id="giftsErr"></div>
 </section>
 
 <script>
@@ -424,15 +432,18 @@
   final.innerHTML=`<div class="food" style="font-size:64px">💌</div><h3>Tus antojos</h3><ul class="summary" id="summary"></ul><button class="pick send" id="send">Enviar a mi amor 💌</button>`;
   carousel.appendChild(final);
   const summary=final.querySelector('#summary');
+  const giftsErr=document.getElementById('giftsErr'), finishBtn=document.getElementById('finishBtn');
   function updateSummary(){
     const items=[...chosen].sort((a,b)=>a-b).map(i=>foods[i]);
     count.textContent=items.length===1?'1 elegido':items.length+' elegidos';
+    if(items.length) giftsErr.textContent='';
     summary.innerHTML=items.length?items.map(([e,n])=>`<li>${e} ${n}</li>`).join(''):'<li>Todavía no elegiste nada 🥺<br>Desliza hacia atrás y elige tus antojos</li>';
   }
   updateSummary();
-  final.querySelector('#send').addEventListener('click',()=>{
+  function sendGifts(){
     if(!chosen.size){
-      final.classList.remove('shake'); void final.offsetWidth; final.classList.add('shake');
+      giftsErr.textContent='Elige al menos un antojo primero 🥺';
+      finishBtn.classList.remove('shake'); void finishBtn.offsetWidth; finishBtn.classList.add('shake');
       return;
     }
     const list=[...chosen].sort((a,b)=>a-b).map(i=>`• ${foods[i][0]} ${foods[i][1]}`).join('\n');
@@ -441,7 +452,26 @@ ${list}
 
 Con amor, tu Susan 😘`;
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+  final.querySelector('#send').addEventListener('click',sendGifts);
+  finishBtn.addEventListener('click',sendGifts);
+
+  // Puntitos indicadores del carrusel
+  const dotsNav=document.getElementById('dots');
+  [...carousel.children].forEach(s=>{
+    const d=document.createElement('span');
+    d.className='dot';
+    d.addEventListener('click',()=>carousel.scrollTo({left:s.offsetLeft-(carousel.clientWidth-s.offsetWidth)/2,behavior:'smooth'}));
+    dotsNav.appendChild(d);
   });
+  function updateDots(){
+    const mid=carousel.scrollLeft+carousel.clientWidth/2;
+    let best=0,bd=1e9;
+    [...carousel.children].forEach((s,i)=>{const d=Math.abs(s.offsetLeft+s.offsetWidth/2-mid);if(d<bd){bd=d;best=i;}});
+    [...dotsNav.children].forEach((d,i)=>d.classList.toggle('on',i===best));
+  }
+  carousel.addEventListener('scroll',updateDots,{passive:true});
+  updateDots();
   const step=()=>carousel.querySelector('.slide').offsetWidth+14;
   document.getElementById('prev').addEventListener('click',()=>carousel.scrollBy({left:-step(),behavior:'smooth'}));
   document.getElementById('next').addEventListener('click',()=>carousel.scrollBy({left:step(),behavior:'smooth'}));
