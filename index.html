@@ -16,10 +16,10 @@
     min-height:100dvh;
   }
   #bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-  .float-heart{position:absolute;bottom:-60px;animation:rise linear forwards;opacity:.85;will-change:transform}
+  .float-heart{position:absolute;bottom:-60px;animation:rise linear forwards;opacity:1;will-change:transform;text-shadow:0 0 10px rgba(255,255,255,.9),0 0 18px rgba(255,80,160,.6)}
   @keyframes rise{
     0%{transform:translateY(0) translateX(0) rotate(0) scale(var(--s));opacity:0}
-    10%{opacity:.9}
+    10%{opacity:1}
     50%{transform:translateY(-55vh) translateX(var(--dx)) rotate(20deg) scale(var(--s))}
     100%{transform:translateY(-115vh) translateX(0) rotate(-20deg) scale(var(--s));opacity:0}
   }
@@ -83,7 +83,7 @@
   @keyframes glow{from{text-shadow:0 0 8px #fff,0 0 18px #ff6fa3}to{text-shadow:0 0 18px #fff,0 0 40px #ff2e74,0 0 60px #ff2e74}}
   .again{margin-top:30px;width:auto;padding:12px 26px;font-size:15px;opacity:0;animation:fadeIn .6s forwards;animation-delay:5.5s}
 
-  .burst{position:fixed;z-index:5;pointer-events:none;font-size:24px;will-change:transform,opacity;animation:burst 1.4s ease-out forwards}
+  .burst{position:fixed;z-index:5;pointer-events:none;font-size:24px;will-change:transform,opacity;animation:burst 1.6s ease-out forwards;text-shadow:0 0 10px rgba(255,255,255,.95),0 0 20px rgba(255,90,170,.7)}
   @keyframes burst{
     0%{transform:translate(-50%,-50%) scale(.3);opacity:1}
     100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(var(--sc)) rotate(var(--r));opacity:0}
@@ -168,6 +168,7 @@
 
 <script>
   const hearts = ['❤️','💖','💗','💕','💘','💞','💓','💝'];
+  const colorHearts = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗','💘','💝','💞'];
   const rand = (a,b)=>Math.random()*(b-a)+a;
   const pick = arr => arr[Math.floor(Math.random()*arr.length)];
 
@@ -189,7 +190,7 @@
   function floatHeart(){
     const h = document.createElement('span');
     h.className='float-heart';
-    h.textContent=pick(hearts);
+    h.textContent=pick(colorHearts);
     h.style.left=rand(0,100)+'vw';
     h.style.fontSize=rand(16,38)+'px';
     h.style.setProperty('--s',rand(.7,1.3));
@@ -200,7 +201,9 @@
     setTimeout(()=>h.remove(),d*1000);
   }
   for(let i=0;i<14;i++) setTimeout(floatHeart,i*250);
-  setInterval(floatHeart,420);
+  setInterval(floatHeart,260);
+  setInterval(()=>{ if(!document.hidden) burst(rand(innerWidth*.1,innerWidth*.9),rand(innerHeight*.1,innerHeight*.8),14); },2200);
+  document.addEventListener('pointerdown',e=>{ if(!e.target.closest('button,input')) burst(e.clientX,e.clientY,18); },{passive:true});
 
   // Corazones alrededor de Susan
   function fillOrbit(el,count,radius){
@@ -224,16 +227,16 @@
     for(let i=0;i<n;i++){
       const b=document.createElement('span');
       b.className='burst';
-      b.textContent=pick(hearts);
+      b.textContent=pick(colorHearts);
       b.style.left=x+'px'; b.style.top=y+'px';
       const ang=rand(0,Math.PI*2), dist=rand(80,Math.max(innerWidth,innerHeight)*.6);
       b.style.setProperty('--x',Math.cos(ang)*dist+'px');
       b.style.setProperty('--y',Math.sin(ang)*dist+'px');
       b.style.setProperty('--sc',rand(.8,2));
       b.style.setProperty('--r',rand(-180,180)+'deg');
-      b.style.fontSize=rand(18,34)+'px';
+      b.style.fontSize=rand(20,44)+'px';
       document.body.appendChild(b);
-      setTimeout(()=>b.remove(),1500);
+      setTimeout(()=>b.remove(),1700);
     }
   }
 
@@ -248,7 +251,7 @@
       return;
     }
     input.blur();
-    burst(innerWidth/2,innerHeight/2,30);
+    burst(innerWidth/2,innerHeight/2,70);
     setTimeout(()=>show('susan'),350);
   });
 
@@ -273,14 +276,15 @@
   let rain;
   document.getElementById('susanBtn').addEventListener('click',e=>{
     const r=e.currentTarget.getBoundingClientRect();
-    burst(r.left+r.width/2,r.top+r.height/2,60);
+    burst(r.left+r.width/2,r.top+r.height/2,140);
+    setTimeout(()=>burst(r.left+r.width/2,r.top+r.height/2,80),250);
     if(navigator.vibrate) navigator.vibrate([80,60,80]);
     setTimeout(()=>{
       show('message');
       typeMessage();
       clearInterval(rain);
-      rain=setInterval(()=>burst(rand(0,innerWidth),rand(0,innerHeight*.6),8),700);
-      setTimeout(()=>clearInterval(rain),7000);
+      rain=setInterval(()=>burst(rand(0,innerWidth),rand(0,innerHeight*.7),18),450);
+      setTimeout(()=>clearInterval(rain),10000);
     },500);
   });
 
@@ -308,7 +312,7 @@
     d.innerHTML=`<div class="food">${e}</div><span class="tag">${t==='Dulce'?'🍬 Dulce':'🧂 Salada'}</span><h3>${n}</h3><button class="pick">Lo quiero 💖</button>`;
     d.querySelector('.pick').addEventListener('click',ev=>{
       if(chosen.has(i)){chosen.delete(i);d.classList.remove('selected');ev.target.textContent='Lo quiero 💖';}
-      else{chosen.add(i);d.classList.add('selected');ev.target.textContent='¡Elegido! ✅';const r=ev.target.getBoundingClientRect();burst(r.left+r.width/2,r.top,14);}
+      else{chosen.add(i);d.classList.add('selected');ev.target.textContent='¡Elegido! ✅';const r=ev.target.getBoundingClientRect();burst(r.left+r.width/2,r.top,30);}
       updateSummary();
     });
     carousel.appendChild(d);
