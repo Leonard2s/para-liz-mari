@@ -115,7 +115,13 @@
   .judge{width:170px;height:170px;object-fit:cover;border-radius:50%;border:4px solid #fff;box-shadow:0 12px 30px rgba(160,20,70,.45);animation:judgeBob 2.2s ease-in-out infinite}
   @keyframes judgeBob{50%{transform:translateY(-6px) rotate(-2deg)}}
   .judge-title{font-size:46px}
-  input[type=date]{color-scheme:light}
+  .date-pick{display:flex;gap:10px}
+  .date-pick select{
+    flex:1;padding:16px 12px;border-radius:18px;border:2px solid #fff;outline:none;
+    font-size:17px;font-family:inherit;text-align:center;color:#c2185b;background:#fff;
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.08);
+  }
+  .date-pick select:focus{border-color:#ff2e74;box-shadow:0 0 0 4px rgba(255,255,255,.45)}
 
   /* Verificando: el perro se acerca */
   .judge-zoom{width:min(72vw,340px);border-radius:26px;box-shadow:0 24px 70px rgba(120,0,50,.55);animation:approach 5s cubic-bezier(.25,.5,.35,1) forwards}
@@ -158,7 +164,18 @@
       <h1 class="judge-title">A ver...</h1>
       <p class="sub">¿Cuál es la fecha de nuestro aniversario? 🧐</p>
       <form id="formDate" autocomplete="off">
-        <input id="date" type="date" aria-label="Fecha de aniversario">
+        <div class="date-pick">
+          <select id="month" aria-label="Mes">
+            <option value="">Mes</option>
+            <option value="01">Enero</option><option value="02">Febrero</option>
+            <option value="03">Marzo</option><option value="04">Abril</option>
+            <option value="05">Mayo</option><option value="06">Junio</option>
+            <option value="07">Julio</option><option value="08">Agosto</option>
+            <option value="09">Septiembre</option><option value="10">Octubre</option>
+            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <select id="day" aria-label="Día"><option value="">Día</option></select>
+        </div>
         <button type="submit">Comprobar 💕</button>
       </form>
     </div>
@@ -302,29 +319,41 @@
   });
 
   // Validación del aniversario: el perro juzga 5s y luego aprueba
-  const ANNIVERSARY='';
-  const formDate=document.getElementById('formDate'), dateInput=document.getElementById('date');
+  // La fecha correcta (MM-DD) vive en aniversario.txt en este mismo repo
+  const formDate=document.getElementById('formDate');
+  const monthSel=document.getElementById('month'), daySel=document.getElementById('day');
+  for(let d=1;d<=31;d++){
+    const o=document.createElement('option');
+    o.value=String(d).padStart(2,'0'); o.textContent=d;
+    daySel.appendChild(o);
+  }
+  async function getAnniversary(){
+    try{
+      const t=(await (await fetch('aniversario.txt',{cache:'no-store'})).text()).trim();
+      return /^\d{2}-\d{2}$/.test(t)?t:'';
+    }catch(e){return '';}
+  }
   formDate.addEventListener('submit',e=>{
     e.preventDefault();
-    if(!dateInput.value){
-      err.textContent='Pon la fecha, mi amor 🥺';
+    if(!monthSel.value||!daySel.value){
+      err.textContent='Elige el mes y el día, mi amor 🥺';
       shakeCard();
       return;
     }
     err.textContent='';
-    dateInput.blur();
     show('checking');
-    setTimeout(()=>{
-      if(!ANNIVERSARY || dateInput.value===ANNIVERSARY){
+    const chosen=monthSel.value+'-'+daySel.value;
+    Promise.all([getAnniversary(),new Promise(r=>setTimeout(r,5000))]).then(([anniv])=>{
+      if(!anniv || chosen===anniv){
         burst(innerWidth/2,innerHeight/2,70);
         show('approved');
-        setTimeout(()=>show('susan'),1800);
+        setTimeout(()=>show('susan'),3800);
       }else{
         show('login');
         err.textContent='Esa no es 😤 el perro te sigue juzgando';
         shakeCard();
       }
-    },5000);
+    });
   });
 
   function typeMessage(){
