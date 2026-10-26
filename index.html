@@ -422,7 +422,12 @@
     d.innerHTML=`<div class="food">${e}</div><span class="tag">${t==='Dulce'?'🍬 Dulce':'🧂 Salada'}</span><h3>${n}</h3><button class="pick">Lo quiero 💖</button>`;
     d.querySelector('.pick').addEventListener('click',ev=>{
       if(chosen.has(i)){chosen.delete(i);d.classList.remove('selected');ev.target.textContent='Lo quiero 💖';}
-      else{chosen.add(i);d.classList.add('selected');ev.target.textContent='¡Elegido! ✅';const r=ev.target.getBoundingClientRect();burst(r.left+r.width/2,r.top,30);}
+      else{
+        chosen.add(i);d.classList.add('selected');ev.target.textContent='¡Elegido! ✅';
+        const r=ev.target.getBoundingClientRect();burst(r.left+r.width/2,r.top,30);
+        const nx=carousel.children[i+1];
+        if(nx) setTimeout(()=>carousel.scrollTo({left:nx.offsetLeft-(carousel.clientWidth-nx.offsetWidth)/2,behavior:'smooth'}),450);
+      }
       updateSummary();
     });
     carousel.appendChild(d);
