@@ -451,7 +451,7 @@
 ${list}
 
 Con amor, tu Susan 😘`;
-    window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`,'_blank');
+    window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP}&text=${encodeURIComponent(msg)}`,'_blank');
   }
   final.querySelector('#send').addEventListener('click',sendGifts);
   finishBtn.addEventListener('click',sendGifts);
