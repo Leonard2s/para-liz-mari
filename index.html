@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#ff4d8d">
+<title>Para Liz Mari ❤</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden}
+  body{
+    font-family:'Poppins',system-ui,sans-serif;
+    background:radial-gradient(circle at 30% 20%,#ffd1e3 0%,#ff8fb8 45%,#e0457b 100%);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    min-height:100dvh;
+  }
+  #bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .float-heart{position:absolute;bottom:-60px;animation:rise linear forwards;opacity:.85;will-change:transform}
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0) rotate(0) scale(var(--s));opacity:0}
+    10%{opacity:.9}
+    50%{transform:translateY(-55vh) translateX(var(--dx)) rotate(20deg) scale(var(--s))}
+    100%{transform:translateY(-115vh) translateX(0) rotate(-20deg) scale(var(--s));opacity:0}
+  }
+  .screen{position:relative;z-index:2;width:100%;max-width:420px;padding:24px;display:none;text-align:center}
+  .screen.active{display:block;animation:fadeIn .7s ease}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+  /* Login */
+  .card{
+    background:rgba(255,255,255,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.5);border-radius:28px;padding:34px 24px;
+    box-shadow:0 20px 50px rgba(160,20,70,.35);
+  }
+  .big-heart{font-size:64px;display:inline-block;animation:beat 1.1s infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.22)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+  h1{font-family:'Great Vibes',cursive;font-size:48px;font-weight:400;margin:6px 0 4px;text-shadow:0 3px 10px rgba(150,0,60,.4)}
+  .sub{font-size:15px;opacity:.95;margin-bottom:24px}
+  input{
+    width:100%;padding:16px 18px;border-radius:18px;border:2px solid #fff;outline:none;
+    font-size:18px;font-family:inherit;text-align:center;color:#c2185b;background:#fff;
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.08);
+  }
+  input:focus{border-color:#ff2e74;box-shadow:0 0 0 4px rgba(255,255,255,.45)}
+  button{
+    margin-top:16px;width:100%;padding:16px;border:none;border-radius:18px;cursor:pointer;
+    font-size:18px;font-weight:600;font-family:inherit;color:#fff;
+    background:linear-gradient(135deg,#ff2e74,#c2185b);box-shadow:0 10px 25px rgba(194,24,91,.45);
+    transition:transform .15s;
+  }
+  button:active{transform:scale(.96)}
+  .error{min-height:22px;margin-top:10px;font-size:14px;color:#fff;font-weight:600}
+  .shake{animation:shake .4s}
+  @keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+
+  /* Susan */
+  .hello{font-size:18px;margin-bottom:10px;opacity:.95}
+  .ring{position:relative;width:300px;height:300px;margin:0 auto;max-width:82vw;max-height:82vw}
+  .orbit{position:absolute;inset:0;animation:spin 14s linear infinite}
+  .orbit.rev{animation-direction:reverse;animation-duration:20s;inset:30px}
+  .orbit span{position:absolute;left:50%;top:50%;font-size:26px;transform-origin:0 0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .name-btn{
+    position:absolute;inset:0;margin:auto;width:62%;height:62%;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    background:radial-gradient(circle,#fff 0%,#ffe1ec 70%);color:#e0457b;
+    box-shadow:0 0 0 8px rgba(255,255,255,.35),0 15px 40px rgba(160,20,70,.45);
+    font-family:'Great Vibes',cursive;font-size:56px;animation:beat 1.4s infinite;border:none;
+  }
+  .hint{margin-top:22px;font-size:16px;animation:blink 1.6s infinite}
+  @keyframes blink{50%{opacity:.4}}
+
+  /* Mensaje */
+  #message .line{font-family:'Great Vibes',cursive;font-weight:400;text-shadow:0 4px 14px rgba(150,0,60,.5);line-height:1.15}
+  #message .l1{font-size:64px}
+  #message .l2{font-size:54px}
+  #message .l3{font-size:44px;margin-top:10px}
+  #message .l4{font-size:52px;margin-top:6px}
+  .ch{display:inline-block;opacity:0;transform:translateY(30px) scale(.4) rotate(-15deg);animation:pop .55s cubic-bezier(.2,1.6,.4,1) forwards}
+  @keyframes pop{to{opacity:1;transform:none}}
+  .glow{animation:glow 2s ease-in-out infinite alternate}
+  @keyframes glow{from{text-shadow:0 0 8px #fff,0 0 18px #ff6fa3}to{text-shadow:0 0 18px #fff,0 0 40px #ff2e74,0 0 60px #ff2e74}}
+  .again{margin-top:30px;width:auto;padding:12px 26px;font-size:15px;opacity:0;animation:fadeIn .6s forwards;animation-delay:5.5s}
+
+  .burst{position:fixed;z-index:5;pointer-events:none;font-size:24px;will-change:transform,opacity;animation:burst 1.4s ease-out forwards}
+  @keyframes burst{
+    0%{transform:translate(-50%,-50%) scale(.3);opacity:1}
+    100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(var(--sc)) rotate(var(--r));opacity:0}
+  }
+  @media (max-height:640px){
+    .ring{width:240px;height:240px}
+    .name-btn{font-size:46px}
+    #message .l1{font-size:52px}#message .l2{font-size:44px}#message .l3{font-size:36px}#message .l4{font-size:42px}
+  }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<!-- Inicio de sesión -->
+<section id="login" class="screen active">
+  <div class="card" id="card">
+    <div class="big-heart">💖</div>
+    <h1>Para Liz Mari</h1>
+    <p class="sub">Inicia sesión, mi amor</p>
+    <form id="form" autocomplete="off">
+      <input id="name" type="text" placeholder="Escribe tu nombre" maxlength="30" aria-label="Tu nombre">
+      <button type="submit">Entrar 💕</button>
+    </form>
+    <div class="error" id="error"></div>
+  </div>
+</section>
+
+<!-- Susan rodeada de corazones -->
+<section id="susan" class="screen">
+  <p class="hello" id="hello"></p>
+  <div class="ring">
+    <div class="orbit" id="orbit1"></div>
+    <div class="orbit rev" id="orbit2"></div>
+    <button class="name-btn" id="susanBtn" aria-label="Susan">Susan</button>
+  </div>
+  <p class="hint">👆 Toca a Susan 👆</p>
+</section>
+
+<!-- Mensaje animado -->
+<section id="message" class="screen">
+  <div class="line l1 glow" data-text="Susan"></div>
+  <div class="line l2" data-text="susantísimo"></div>
+  <div class="line l3" data-text="¡qué linda tú estás"></div>
+  <div class="line l4 glow" data-text="mi amor hermosa! 💖"></div>
+  <button class="again" id="again">Otra vez 💞</button>
+</section>
+
+<script>
+  const hearts = ['❤️','💖','💗','💕','💘','💞','💓','💝'];
+  const rand = (a,b)=>Math.random()*(b-a)+a;
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+  // Corazones flotando de fondo
+  const bg = document.getElementById('bg');
+  function floatHeart(){
+    const h = document.createElement('span');
+    h.className='float-heart';
+    h.textContent=pick(hearts);
+    h.style.left=rand(0,100)+'vw';
+    h.style.fontSize=rand(16,38)+'px';
+    h.style.setProperty('--s',rand(.7,1.3));
+    h.style.setProperty('--dx',rand(-40,40)+'px');
+    const d=rand(6,12);
+    h.style.animationDuration=d+'s';
+    bg.appendChild(h);
+    setTimeout(()=>h.remove(),d*1000);
+  }
+  for(let i=0;i<14;i++) setTimeout(floatHeart,i*250);
+  setInterval(floatHeart,420);
+
+  // Corazones alrededor de Susan
+  function fillOrbit(el,count,radius){
+    for(let i=0;i<count;i++){
+      const s=document.createElement('span');
+      const ang=(360/count)*i;
+      s.textContent=hearts[i%hearts.length];
+      s.style.transform=`rotate(${ang}deg) translate(${radius}) rotate(-${ang}deg) translate(-50%,-50%)`;
+      el.appendChild(s);
+    }
+  }
+  fillOrbit(document.getElementById('orbit1'),14,'min(150px, 41vw)');
+  fillOrbit(document.getElementById('orbit2'),10,'min(118px, 33vw)');
+
+  function show(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function burst(x,y,n=40){
+    for(let i=0;i<n;i++){
+      const b=document.createElement('span');
+      b.className='burst';
+      b.textContent=pick(hearts);
+      b.style.left=x+'px'; b.style.top=y+'px';
+      const ang=rand(0,Math.PI*2), dist=rand(80,Math.max(innerWidth,innerHeight)*.6);
+      b.style.setProperty('--x',Math.cos(ang)*dist+'px');
+      b.style.setProperty('--y',Math.sin(ang)*dist+'px');
+      b.style.setProperty('--sc',rand(.8,2));
+      b.style.setProperty('--r',rand(-180,180)+'deg');
+      b.style.fontSize=rand(18,34)+'px';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),1500);
+    }
+  }
+
+  const form=document.getElementById('form'), input=document.getElementById('name'), err=document.getElementById('error');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=input.value.trim();
+    if(!name){
+      err.textContent='Escribe tu nombre, hermosa 💕';
+      const c=document.getElementById('card');
+      c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+      return;
+    }
+    input.blur();
+    document.getElementById('hello').textContent=`Hola, ${name} 💗`;
+    burst(innerWidth/2,innerHeight/2,30);
+    setTimeout(()=>show('susan'),350);
+  });
+
+  function typeMessage(){
+    let delay=0;
+    document.querySelectorAll('#message .line').forEach(line=>{
+      line.innerHTML='';
+      [...line.dataset.text].forEach(ch=>{
+        const s=document.createElement('span');
+        s.className='ch';
+        s.innerHTML=ch===' '?'&nbsp;':ch;
+        s.style.animationDelay=delay+'s';
+        line.appendChild(s);
+        delay+=0.07;
+      });
+      delay+=0.25;
+    });
+    const again=document.getElementById('again');
+    again.style.animation='none'; void again.offsetWidth; again.style.animation='';
+  }
+
+  let rain;
+  document.getElementById('susanBtn').addEventListener('click',e=>{
+    const r=e.currentTarget.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,60);
+    if(navigator.vibrate) navigator.vibrate([80,60,80]);
+    setTimeout(()=>{
+      show('message');
+      typeMessage();
+      clearInterval(rain);
+      rain=setInterval(()=>burst(rand(0,innerWidth),rand(0,innerHeight*.6),8),700);
+      setTimeout(()=>clearInterval(rain),7000);
+    },500);
+  });
+
+  document.getElementById('again').addEventListener('click',()=>{
+    clearInterval(rain);
+    show('susan');
+  });
+</script>
+</body>
+</html>
