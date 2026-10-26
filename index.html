@@ -88,6 +88,8 @@
     0%{transform:translate(-50%,-50%) scale(.3);opacity:1}
     100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(var(--sc)) rotate(var(--r));opacity:0}
   }
+  .music{position:fixed;top:14px;right:14px;z-index:10;width:48px;height:48px;margin:0;padding:0;border-radius:50%;font-size:22px;background:rgba(255,255,255,.35);box-shadow:0 6px 16px rgba(160,20,70,.3);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  .music.playing{animation:beat 1.2s infinite}
   @media (max-height:640px){
     .ring{width:240px;height:240px}
     .name-btn{font-size:46px}
@@ -97,6 +99,8 @@
 </head>
 <body>
 <div id="bg"></div>
+<audio id="music" src="musica.m4a" loop preload="auto" playsinline></audio>
+<button class="music" id="musicBtn" aria-label="Música">🔇</button>
 
 <!-- Inicio de sesión -->
 <section id="login" class="screen active">
@@ -136,6 +140,19 @@
   const hearts = ['❤️','💖','💗','💕','💘','💞','💓','💝'];
   const rand = (a,b)=>Math.random()*(b-a)+a;
   const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+  const music=document.getElementById('music'), musicBtn=document.getElementById('musicBtn');
+  let userMuted=false;
+  music.addEventListener('play',()=>{musicBtn.textContent='🎵';musicBtn.classList.add('playing')});
+  music.addEventListener('pause',()=>{musicBtn.textContent='🔇';musicBtn.classList.remove('playing')});
+  function startMusic(e){ if(e && e.target===musicBtn) return; if(!userMuted && music.paused) music.play().catch(()=>{}); }
+  startMusic();
+  ['pointerdown','touchstart','keydown','click'].forEach(ev=>document.addEventListener(ev,startMusic,{passive:true}));
+  musicBtn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(music.paused){userMuted=false;music.play().catch(()=>{});}
+    else{userMuted=true;music.pause();}
+  });
 
   // Corazones flotando de fondo
   const bg = document.getElementById('bg');
